@@ -9,7 +9,6 @@ namespace Core.Entities
         [Required]
         public string Description { get; set; }
         public decimal Price { get; set; }
-        [Required]
         public string PictureUrl { get; set; }
         [Required]
         public string Type { get; set; }
