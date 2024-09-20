@@ -21,6 +21,13 @@ namespace Core.Specification
         public Expression<Func<T, object>> OrderByDescending { get; private set; }
 
         public bool IsDistinct { get; private set; }
+
+        public int Take { get; private set; }
+
+        public int Skip { get; private set; }
+
+        public bool IsPagingEnabled { get; private set; }
+
         protected void ApplyDistinct()
         {
             IsDistinct = true;
@@ -34,6 +41,23 @@ namespace Core.Specification
         protected void AddOrderByDescending(Expression<Func<T, object>> orderByDesc)
         {
             this.OrderByDescending = orderByDesc;
+        }
+
+        protected void ApplyPaging(int skip, int take)
+        {
+            Skip = skip;
+            Take = take;
+            IsPagingEnabled = true;
+        }
+
+        public IQueryable<T> ApplyCriteria(IQueryable<T> query)
+        {
+            if(criteria != null)
+            {
+                query = query.Where(criteria);
+            }
+
+            return query;
         }
     }
 

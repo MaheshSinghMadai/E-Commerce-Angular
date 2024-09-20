@@ -7,7 +7,6 @@ namespace Infrastructure.Data
     public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
     {
         private readonly StoreContext context;
-
         public GenericRepository(StoreContext context)
         {
             this.context = context;
@@ -75,6 +74,14 @@ namespace Infrastructure.Data
         private IQueryable<TResult> ApplySpecification<TResult>(ISpecification<T, TResult> spec)
         {
             return SpecificationEvaluator<T>.GetQuery<T, TResult>(context.Set<T>().AsQueryable(), spec);
+        }
+
+        public async Task<int> CountAsync(ISpecification<T> spec)
+        {
+            var query = context.Set<T>().AsQueryable();
+            query = spec.ApplyCriteria(query);
+            
+            return await query.CountAsync();
         }
     }
 }

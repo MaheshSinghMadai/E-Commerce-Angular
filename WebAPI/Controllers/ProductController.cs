@@ -2,12 +2,11 @@
 using Core.Interfaces;
 using Core.Specification;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.Helper;
 
 namespace WebAPI.Controllers
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class ProductController : ControllerBase
+    public class ProductController : BaseApiController
     {
         private IGenericRepository<Product> repo;
         public ProductController(IGenericRepository<Product> repo)
@@ -17,11 +16,11 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         [Route("[action]")]
-        public async Task<ActionResult<IReadOnlyList<Product>>> GetProducts(string brand, string type, string sort)
+        public async Task<ActionResult<IReadOnlyList<Product>>> GetProducts([FromQuery] ProductSpecParams sp)
         {
-            var spec = new ProductSpecification(brand, type, sort);
-            var products = await repo.ListAsync(spec);
-            return Ok(products);
+            var spec = new ProductSpecification(sp);
+
+            return await CreatePagedResult(repo, spec, sp.PageIndex, sp.PageSize);
         }
 
         [HttpGet]

@@ -5,57 +5,67 @@ namespace Infrastructure.Data
 {
     public class SpecificationEvaluator<T> where T: BaseEntity
     {
-        public static IQueryable<T> GetQuery(IQueryable<T> query, ISpecification<T> specification)
+        public static IQueryable<T> GetQuery(IQueryable<T> query, ISpecification<T> spec)
         {
-            if (specification.Criteria != null)
+            if (spec.Criteria != null)
             {
-               query = query.Where(specification.Criteria);
+               query = query.Where(spec.Criteria);
             }
 
-            if(specification.OrderBy != null)
+            if(spec.OrderBy != null)
             {
-                query = query.OrderBy(specification.OrderBy);
+                query = query.OrderBy(spec.OrderBy);
             }
 
-            if (specification.OrderByDescending != null)
+            if (spec.OrderByDescending != null)
             {
-                query = query.OrderByDescending(specification.OrderByDescending);
+                query = query.OrderByDescending(spec.OrderByDescending);
             }
 
-            if (specification.IsDistinct)
+            if (spec.IsDistinct)
             {
                 query = query.Distinct();
+            }
+
+            if (spec.IsPagingEnabled)
+            {
+                query = query.Skip(spec.Skip).Take(spec.Take);
             }
 
             return query;
         }
 
-        public static IQueryable<TResult> GetQuery<TSpec, TResult>(IQueryable<T> query, ISpecification<T, TResult> specification)
+        public static IQueryable<TResult> GetQuery<TSpec, TResult>(IQueryable<T> query, ISpecification<T, TResult> spec)
         {
-            if (specification.Criteria != null)
+            if (spec.Criteria != null)
             {
-                query = query.Where(specification.Criteria);
+                query = query.Where(spec.Criteria);
             }
 
-            if (specification.OrderBy != null)
+            if (spec.OrderBy != null)
             {
-                query = query.OrderBy(specification.OrderBy);
+                query = query.OrderBy(spec.OrderBy);
             }
 
-            if (specification.OrderByDescending != null)
+            if (spec.OrderByDescending != null)
             {
-                query = query.OrderByDescending(specification.OrderByDescending);
+                query = query.OrderByDescending(spec.OrderByDescending);
             }
 
             var selectQuery = query as IQueryable<TResult>;
-            if(specification.Select != null)
+            if(spec.Select != null)
             {
-                selectQuery = query.Select(specification.Select);
+                selectQuery = query.Select(spec.Select);
             }
 
-            if (specification.IsDistinct)
+            if (spec.IsDistinct)
             {
                 selectQuery = selectQuery.Distinct();
+            }
+
+            if (spec.IsPagingEnabled)
+            {
+                selectQuery = selectQuery.Skip(spec.Skip).Take(spec.Take);
             }
 
             return selectQuery ?? query.Cast<TResult>();
