@@ -1,7 +1,6 @@
 ﻿using Core.Entities;
 using Core.Interfaces;
 using Core.Specification;
-using Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
@@ -42,14 +41,16 @@ namespace WebAPI.Controllers
         [Route("[action]")]
         public async Task<ActionResult<IReadOnlyList<string>>> GetBrands()
         {
-           return Ok();
+           var spec = new BrandListSpecification();
+           return Ok(await repo.ListAsync(spec));
         }
 
         [HttpGet]
         [Route("[action]")]
         public async Task<ActionResult<IReadOnlyList<string>>> GetTypes()
         {
-            return Ok();
+            var spec = new TypeListSpecification();
+            return Ok(await repo.ListAsync(spec));
         }
 
         [HttpPost]
