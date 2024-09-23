@@ -15,18 +15,16 @@ namespace Infrastructure.Data
         {
             context.Set<T>().Add(entity);
         }
-
         public bool Exists(int id)
         {
             return context.Set<T>().Any(x => x.Id == id);
         }
-
         public async Task<T> GetByIdAsync(int id)
         {
             return await context.Set<T>().FindAsync(id);
         }
 
-        public async Task<T> GetEnttiyWithSpec(ISpecification<T> spec)
+        public async Task<T> GetEntityWithSpec(ISpecification<T> spec)
         {
             return await ApplySpecification(spec).FirstOrDefaultAsync();
         }
@@ -40,7 +38,6 @@ namespace Infrastructure.Data
         {
             return await context.Set<T>().ToListAsync();
         }
-
         public void Remove(T entity)
         {
             context.Set<T>().Remove(entity);
@@ -57,7 +54,7 @@ namespace Infrastructure.Data
             context.Entry(entity).State = EntityState.Modified;
         }
 
-        public async Task<TResult> GetEnttiyWithSpec<TResult>(ISpecification<T, TResult> spec)
+        public async Task<TResult> GetEntityWithSpec<TResult>(ISpecification<T, TResult> spec)
         {
             return await ApplySpecification(spec).FirstOrDefaultAsync();
         }
@@ -75,7 +72,6 @@ namespace Infrastructure.Data
         {
             return SpecificationEvaluator<T>.GetQuery<T, TResult>(context.Set<T>().AsQueryable(), spec);
         }
-
         public async Task<int> CountAsync(ISpecification<T> spec)
         {
             var query = context.Set<T>().AsQueryable();
