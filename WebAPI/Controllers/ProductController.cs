@@ -2,7 +2,6 @@
 using Core.Interfaces;
 using Core.Specification;
 using Microsoft.AspNetCore.Mvc;
-using WebAPI.Helper;
 
 namespace WebAPI.Controllers
 {
