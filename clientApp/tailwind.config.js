@@ -4,7 +4,11 @@ module.exports = {
     "./src/**/*.{html,ts}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ['"Inter var"', 'sans-serif'], // Set "Inter var" as the default font family
+      },
+    },
   },
   plugins: [],
   important : true

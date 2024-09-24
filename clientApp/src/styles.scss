@@ -1,5 +1,7 @@
 @use '@angular/material' as mat;
 
+
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -18,7 +20,7 @@ $custom-theme: mat.define-theme();
 }
 
 .container{
-  @apply mx-auto max-w-screen-2xl
+  @apply mx-auto max-w-screen-xl;
 }
 
 .text-primary {
@@ -26,5 +28,27 @@ $custom-theme: mat.define-theme();
 }
 
 button.match-input-height {
-    height: var(--mat-form-field-container-height) !important;
+  height: var(--mat-form-field-container-height) !important;
+}
+
+a {
+  &.active {
+    color: #7d00fa !important
+  }
+}
+
+.mdc-notched-outline__notch {
+  border-right-style: none !important
+}
+
+.mat-mdc-snack-bar-container.snack-error {
+  --mdc-snackbar-container-color: red;
+  --mat-snack-bar-button-color: #fff;
+  --mdc-snackbar-supporting-text-color: #fff;
+}
+
+.mat-mdc-snack-bar-container.snack-success {
+  --mdc-snackbar-container-color: green;
+  --mat-snack-bar-button-color: #fff;
+  --mdc-snackbar-supporting-text-color: #fff;
 }
