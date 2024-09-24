@@ -7,6 +7,12 @@ import { ProductItemComponent } from "./product-item/product-item.component";
 import { FilterDialogComponent } from './filter-dialog/filter-dialog.component';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
+import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
+import { MatListOption, MatSelectionList, MatSelectionListChange } from '@angular/material/list';
+import { ShopParams } from '../../shared/models/shopParams';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { Pagination } from '../../shared/models/pagination';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-shop',
@@ -15,16 +21,28 @@ import { MatIcon } from '@angular/material/icon';
     MatCardModule,
     ProductItemComponent,
     MatButton,
-    MatIcon
+    MatIcon,
+    MatMenu,
+    MatSelectionList,
+    MatListOption,
+    MatMenuTrigger,
+    MatPaginator,
+    FormsModule
 ],
   templateUrl: './shop.component.html',
   styleUrl: './shop.component.scss'
 })
 export class ShopComponent implements OnInit{
-  title = 'Skinet Ecommerce Web App';
-  products: Product[] = [];
-  selectedBrands : string[] = [];
-  selectedTypes : string[] = [];
+
+  products ?: Pagination<Product>;
+  sortOptions = [
+    { name: 'Alphabetical', value: 'name' },
+    { name: 'Price: Low-High', value: 'priceAsc' },
+    { name: 'Price: High-Low', value: 'priceDsc' },
+  ]
+
+  pageSizeOptions = [ 5,10,15,20]
+  shopParams = new ShopParams();
 
   constructor(
     private shopService: ShopService,
@@ -37,10 +55,19 @@ export class ShopComponent implements OnInit{
   initializeShop(){
     this.shopService.getBrands();
     this.shopService.getTypes();
-    this.shopService.getProducts().subscribe({
-      next: response => this.products = response.data,
+    this.getProducts();
+  }
+
+  getProducts(){
+    this.shopService.getProducts(this.shopParams).subscribe({
+      next: response => this.products = response,
       error: error => console.log(error),
     })
+  }
+
+  onSearchChange(){
+    this.shopParams.pageNumber = 1;
+    this.getProducts();
   }
 
   openFilterDialog(){
@@ -48,8 +75,8 @@ export class ShopComponent implements OnInit{
       {
         minWidth : '500px',
         data : {
-          selectedBrands : this.selectedBrands,
-          selectedTypes : this.selectedTypes
+          selectedBrands : this.shopParams.brands,
+          selectedTypes : this.shopParams.types
         }
       }
     );
@@ -58,14 +85,27 @@ export class ShopComponent implements OnInit{
       next: result => {
         if(result){
           console.log(result);
-          this.selectedBrands = result.selectedBrands;
-          this.selectedTypes = result.selectedTypes;
-          this.shopService.getProducts(this.selectedBrands, this.selectedTypes).subscribe({
-            next: response  => this.products = response.data,
-            error: error => console.log(error),
-          })
+          this.shopParams.brands = result.selectedBrands;
+          this.shopParams.types = result.selectedTypes;
+          this.shopParams.pageNumber = 1;
+          this.getProducts();
         }
       }
     })
+  }
+
+  onSortChange(event : MatSelectionListChange){
+    const selectedOptions = event.options[0];
+    if(selectedOptions){
+      this.shopParams.sort = selectedOptions.value;
+      this.shopParams.pageNumber = 1;
+      this.getProducts();
+    }
+  }
+
+  handlePageEvent(event: PageEvent){
+    this.shopParams.pageNumber = event.pageIndex + 1;
+    this.shopParams.pageSize = event.pageSize;
+    this.getProducts();
   }
 }

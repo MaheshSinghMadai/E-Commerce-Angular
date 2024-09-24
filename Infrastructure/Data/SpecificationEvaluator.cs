@@ -55,7 +55,7 @@ namespace Infrastructure.Data
             var selectQuery = query as IQueryable<TResult>;
             if(spec.Select != null)
             {
-                selectQuery = query.Select(spec.Select);
+                selectQuery = query?.Select(spec.Select);
             }
 
             if (spec.IsDistinct)
@@ -65,7 +65,7 @@ namespace Infrastructure.Data
 
             if (spec.IsPagingEnabled)
             {
-                selectQuery = selectQuery.Skip(spec.Skip).Take(spec.Take);
+                selectQuery = selectQuery?.Skip(spec.Skip).Take(spec.Take);
             }
 
             return selectQuery ?? query.Cast<TResult>();
