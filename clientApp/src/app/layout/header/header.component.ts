@@ -5,6 +5,7 @@ import {MatButtonModule} from '@angular/material/button';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { BusyService } from '../../core/services/busy.service';
 import { MatProgressBar } from '@angular/material/progress-bar';
+import { CartService } from '../../core/services/cart.service';
 @Component({
   selector: 'app-header',
   standalone: true,
@@ -21,4 +22,6 @@ import { MatProgressBar } from '@angular/material/progress-bar';
 })
 export class HeaderComponent {
   busyService = inject(BusyService)
+  cartService = inject(CartService);
+  
 }

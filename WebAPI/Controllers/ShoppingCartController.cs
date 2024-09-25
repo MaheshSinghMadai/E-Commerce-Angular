@@ -16,7 +16,7 @@ namespace WebAPI.Controllers
         [Route("[action]")]
         public async Task<ActionResult<ShoppingCart>> GetCartById(string id)
         {
-            var cart = await this.cartService.GetCartAsync(id);
+            var cart = await cartService.GetCartAsync(id);
 
             return Ok(cart ?? new ShoppingCart {Id = id});
         }
@@ -25,7 +25,7 @@ namespace WebAPI.Controllers
         [Route("[action]")]
         public async Task<ActionResult<ShoppingCart>> UpdateCart(ShoppingCart cart)
         {
-            var updatedCart = await this.cartService.SetCartAsync(cart);
+            var updatedCart = await cartService.SetCartAsync(cart);
             
             if(updatedCart == null)
             {
@@ -38,7 +38,7 @@ namespace WebAPI.Controllers
         [Route("[action]")]
         public async Task<ActionResult> DeleteCart(string id)
         {
-            var result = await this.cartService.DeleteCartAsync(id);
+            var result = await cartService.DeleteCartAsync(id);
 
             if (!result) return BadRequest("Problem Deleting Cart");
 

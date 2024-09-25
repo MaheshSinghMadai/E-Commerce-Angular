@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { CartService } from '../../../core/services/cart.service';
 
 @Component({
   selector: 'app-product-details',
@@ -30,6 +31,7 @@ export class ProductDetailsComponent implements OnInit{
   
   private shopService = inject(ShopService);
   private  activatedRoute = inject(ActivatedRoute);
+  private cartService = inject(CartService);
   product ?: Product;
   quantity = 1;
   quantityInCart = 0;
@@ -43,9 +45,35 @@ export class ProductDetailsComponent implements OnInit{
     if(!id) return;
     
     this.shopService.getProduct(+id).subscribe({
-      next: product => this.product = product,
+      next: product => {
+        this.product = product,
+        this.updateQuantityInCart();
+      },
       error: error => console.log(error)
     })
   }
 
+  updateQuantityInCart(){
+    this.quantityInCart = this.cartService.cart()?.items
+      .find(x => x.productId === this.product?.id)?.quantity || 0
+
+    this.quantity = this.quantityInCart || 1;
+  }
+
+  getButtonsText(){
+    return this.quantityInCart > 0 ? 'Update Cart' : 'Add to cart';
+  }
+
+  updateCart(){
+    if(!this.product) return ;
+    if(this.quantity > this.quantityInCart){
+      const itemsToAdd = this.quantity - this.quantityInCart;
+      this.quantityInCart += itemsToAdd;
+      this.cartService.addItemToCart(this.product, itemsToAdd)
+    }else{
+      const itemsToRemove = this.quantityInCart - this.quantity;
+      this.quantityInCart -= itemsToRemove;
+      this.cartService.removeItemFromCart(this.product.id, itemsToRemove)
+    }
+  }
 }
