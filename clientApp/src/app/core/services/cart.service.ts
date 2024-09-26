@@ -53,12 +53,16 @@ export class CartService {
   }
 
   addItemToCart(item: CartItem | Product, quantity = 1) {
-    const cart = this.cart() ?? this.createCart(); //check exisiting cart, if not exists - create new one
+
+    //check exisiting cart, if not exists - create new one
+    const cart = this.cart() ?? this.createCart(); 
     if (this.isProduct(item)) {
-      item = this.mapProductToCartItem(item);  //convert into cart item if product passed
+
+      //convert into cart item if product passed
+      item = this.mapProductToCartItem(item);  
     }
 
-    cart.items = this.addOrUpdateItems(cart.items, item, quantity); // add or update items in cart
+    cart.items = this.addOrUpdateItems(cart.items, item, quantity); 
     this.setCart(cart); // update cart
   }
 
@@ -68,24 +72,27 @@ export class CartService {
 
     //find index of the product in the cart
     const index = cart.items.findIndex(x => x.productId === productId); 
+
     // checks if product found in cart
     if(index !== -1){         
 
-      console.log(cart.items[index].quantity, quantity);
       // if products quantity is greater than specified quantity                     
       if(cart.items[index].quantity > quantity){
         
         // remove product by specified quantity
-        cart.items[index].quantity =cart.items[index].quantity - quantity      
+        cart.items[index].quantity = cart.items[index].quantity - quantity      
       } else{  
-
         // else remove the product from cart
         cart.items.splice(index, 1);                 
       }
 
       if(cart.items.length === 0){
+
+        //delete the product from cart if item count of a product is 0
         this.deleteCart();
       } else{
+
+        //update the cart i.e. store only remaining products' information 
         this.setCart(cart);
       }
     }
