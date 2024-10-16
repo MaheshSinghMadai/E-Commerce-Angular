@@ -19,7 +19,7 @@ export class AccountService {
   }
 
   register(values: any) {
-    return this.http.post(this.baseUrl + 'Account/register', values);
+    return this.http.post(this.baseUrl + 'Account/Register', values);
   }
 
   getUserInfo() {
@@ -34,10 +34,14 @@ export class AccountService {
   }
 
   logout() {
-    return this.http.post(this.baseUrl + 'Account/logout', {});
+    return this.http.post(this.baseUrl + 'Account/Logout', {});
   }
 
   updateAddress(address: Address) {
-    return this.http.post(this.baseUrl + 'Account/address', address);
+    return this.http.post(this.baseUrl + 'Account/Address', address);
+  }
+
+  getAuthState(){
+    return this.http.get<{isAuthenticated : boolean}>(this.baseUrl + 'Account/GetAuthState');
   }
 }

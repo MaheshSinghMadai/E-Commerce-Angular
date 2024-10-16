@@ -9,7 +9,8 @@ namespace WebAPI.Controllers
 {
     public class AccountController(SignInManager<AppUser> signInManager) : BaseApiController
     {
-        [HttpPost("register")]
+        [HttpPost]
+        [Route("[action]")]
         public async Task<ActionResult> Register(RegisterDto registerDto)
         {
             var user = new AppUser { 
@@ -33,7 +34,8 @@ namespace WebAPI.Controllers
         }
 
         [Authorize]
-        [HttpPost("logout")]
+        [HttpPost]
+        [Route("[action]")]
         public async Task<ActionResult> Logout()
         {
             await signInManager.SignOutAsync();
@@ -69,7 +71,8 @@ namespace WebAPI.Controllers
         }
 
         [Authorize]
-        [HttpPost("address")]
+        [HttpPost]
+        [Route("[action]")]
         public async Task<ActionResult> CreateOrUpdateAddress(AddressDto addressDto)
         {
             var user = await signInManager.UserManager.GetUserByEmailWithAddress(User);
