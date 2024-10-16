@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 using WebAPI.DTOs;
 using WebAPI.Extension;
 
@@ -44,10 +42,11 @@ namespace WebAPI.Controllers
             return NoContent();
         }
 
-        [HttpGet("user-info")]
+        [HttpGet]
+        [Route("[action]")]
         public async Task<ActionResult> GetUserInfo()
         {
-            if (User.Identity.IsAuthenticated ==  false)
+            if (User.Identity.IsAuthenticated == false)
             {
                 return NoContent();
             }
