@@ -9,7 +9,6 @@ namespace WebAPI.Controllers
 {
     public class AccountController(SignInManager<AppUser> signInManager) : BaseApiController
     {
-        [Authorize]
         [HttpPost("register")]
         public async Task<ActionResult> Register(RegisterDto registerDto)
         {
