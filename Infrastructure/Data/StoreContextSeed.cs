@@ -16,6 +16,13 @@ namespace Infrastructure.Data
                     context.Products.AddRange(products);
                 }
 
+                if (!context.DeliveryMethods.Any())
+                {
+                    var dmData = File.ReadAllText(@"../Infrastructure/Data/SeedData/delivery.json");
+                    var delivery = JsonSerializer.Deserialize<List<DeliveryMethod>>(dmData);
+                    context.DeliveryMethods.AddRange(delivery);
+                }
+
                 await context.SaveChangesAsync();
             }
             catch (Exception ex)
