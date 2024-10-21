@@ -54,7 +54,8 @@ namespace WebAPI.Controllers
 
             var user = await signInManager.UserManager.GetUserByEmailWithAddress(User);
 
-            return Ok(new { 
+            return Ok(new
+            {
                 user.Email,
                 user.FirstName,
                 user.LastName,

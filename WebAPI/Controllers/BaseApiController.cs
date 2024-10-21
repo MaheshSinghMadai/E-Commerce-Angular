@@ -6,7 +6,7 @@ using WebAPI.Helper;
 namespace WebAPI.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class BaseApiController : ControllerBase
     {
         protected async Task<ActionResult> CreatePagedResult<T>(IGenericRepository<T> repo, 
