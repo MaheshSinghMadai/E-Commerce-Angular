@@ -21,7 +21,7 @@ jobs:
       with:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
     - name: Restore
-      run: dotnet restore "${{ env.PROJECT_PATH }}" "${{ env.PROJECT_PATH }}"
+      run: dotnet restore "${{ env.PROJECT_PATH }}"
     - name: Build
       run: dotnet build "${{ env.PROJECT_PATH }}" --configuration ${{ env.CONFIGURATION }} --no-restore
     - name: Test
