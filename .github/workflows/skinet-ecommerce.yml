@@ -38,11 +38,31 @@ jobs:
     - name: Download artifact from build job
       uses: actions/download-artifact@v3
       with:
-        name: webapp
-        path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-    - name: Deploy to Azure WebApp
+        name: build
+    - name: Copy files to IIS server using PowerShell
       uses: azure/webapps-deploy@v2
       with:
-        app-name: ${{ env.AZURE_WEBAPP_NAME }}
-        publish-profile: ${{ secrets.skinet_ecommerce_903E }}
-        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+        shell: pwsh
+      run: |
+        $username = "AZUREAD\MAHESHMADAI"
+        $password = "Zsoxfsq977#@" | ConvertTo-SecureString -AsPlainText -Force
+        $cred = New-Object System.Management.Automation.PSCredential ($username, $password)
+        $session = New-PSSession -ComputerName "AGILE-TECH02" -Credential $cred
+        
+        # Stop the IIS App Pool
+        Invoke-Command -Session $session -ScriptBlock {
+          Import-Module WebAdministration
+          Stop-WebAppPool -Name "ecommerce-skinet"
+        }
+        
+        # Copy files from GitHub Actions runner to IIS server
+        Copy-Item -Path ./publish/* -Destination "\\AGILE-TECH02\c$\inetpub\wwwroot\ecommerce-skinet" -Recurse -Force -ToSession $session
+
+        # Start the IIS App Pool
+        Invoke-Command -Session $session -ScriptBlock {
+          Import-Module WebAdministration
+          Start-WebAppPool -Name "ecommerce-skinet"
+        }
+
+        # Clean up session
+        Remove-PSSession $session
