@@ -2,7 +2,7 @@ name: Build and deploy .NET Core application to Web App skinet-ecommerce
 on:
   push:
     branches:
-    - master
+    - demo
 env:
   DOTNET_ROOT: C:\Program Files\dotnet
 jobs:
@@ -36,7 +36,6 @@ jobs:
       with:
         name: build
     - name: Copy files to IIS server using PowerShell
-      uses: azure/webapps-deploy@v2
       with:
         shell: pwsh
       run: |
