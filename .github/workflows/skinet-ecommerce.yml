@@ -1,44 +1,50 @@
-name: Build and deploy .NET Core application to Web App skinet-ecommerce
+name: CI/CD Pipeline for IIS
+
 on:
   push:
     branches:
-    - master
-env:
-  DOTNET_ROOT: C:\Program Files\dotnet
+      - demo  # Change to your desired branch
+
 jobs:
   build:
     runs-on: windows-latest
+    
     steps:
-    - uses: actions/checkout@v4
-    - name: Setup .NET SDK
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
-    - name: Restore
-      run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
-    - name: Build
-      run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
-    - name: Test
-      run: dotnet test "${{ env.WORKING_DIRECTORY }}" --no-build
-    - name: Publish
-      run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
-    - name: Publish Artifacts
+        dotnet-version: '6.0.x'  # Adjust for your .NET version
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build the solution
+      run: dotnet build --configuration Release --no-restore
+
+    - name: Publish the application
+      run: dotnet publish --configuration Release --output ./publish
+
+    - name: Archive the build artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: webapp
-        path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+        name: build
+        path: ./publish
+
   deploy:
-    runs-on: windows-latest
     needs: build
+    runs-on: windows-latest
+
     steps:
-    - name: Download artifact from build job
+    - name: Download build artifact
       uses: actions/download-artifact@v3
       with:
         name: build
-    - name: Copy files to IIS server using PowerShell
-      uses: azure/webapps-deploy@v2
-      with:
-        shell: pwsh
+
+    - name: Set up PowerShell remoting
+      shell: pwsh
       run: |
         $username = "AZUREAD\MAHESHMADAI"
         $password = "Zsoxfsq977#@" | ConvertTo-SecureString -AsPlainText -Force
@@ -62,4 +68,5 @@ jobs:
 
         # Clean up session
         Remove-PSSession $session
-
+env:
+  DOTNET_ROOT: C:\Program Files\dotnet
