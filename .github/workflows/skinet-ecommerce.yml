@@ -32,7 +32,6 @@ jobs:
     needs: build
     steps:
     - name: Download artifact from build job
-      uses: actions/download-artifact@v3
       with:
         name: build
     - name: Copy files to IIS server using PowerShell
