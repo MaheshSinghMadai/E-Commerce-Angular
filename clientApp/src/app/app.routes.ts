@@ -12,18 +12,24 @@ import { RegisterComponent } from './features/account/register/register.componen
 import { authGuard } from './core/guards/auth.guard';
 import { emptyCartGuard } from './core/guards/empty-cart.guard';
 import { CheckoutSuccessComponent } from './features/checkout/checkout-success/checkout-success.component';
+import { OrderComponent } from './features/order/order.component';
+import { OrderDetailedComponent } from './features/order/order-detailed/order-detailed.component';
+import { orderCompleteGuard } from './core/guards/order-complete.guard';
 
 export const routes: Routes = [
+    {path: '', component: HomeComponent},
     {path: 'home', component: HomeComponent},
     {path: 'shop', component: ShopComponent},
     {path: 'shop/:id', component: ProductDetailsComponent},
     {path: 'test-error', component: TestErrorComponent},
     {path: 'checkout', component: CheckoutComponent, canActivate:[authGuard, emptyCartGuard]},
-    {path: 'checkout/success', component: CheckoutSuccessComponent, canActivate:[authGuard]},
+    {path: 'checkout/success', component: CheckoutSuccessComponent, canActivate:[authGuard, orderCompleteGuard]},
+    {path: 'order', component: OrderComponent, canActivate:[authGuard]},
+    {path: 'order/:id', component: OrderDetailedComponent, canActivate:[authGuard]},
     {path: 'account/login', component: LoginComponent},
     {path: 'account/register', component: RegisterComponent},
     {path: 'cart', component: CartComponent},
     {path: 'not-found', component: NotFoundComponent},
     {path: 'server-error', component: ServerErrorComponent},
-    {path: '**', redirectTo:'', pathMatch: 'full'}
+    {path: '**', redirectTo:'not-found', pathMatch: 'full'}
 ];
