@@ -56,13 +56,7 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: build
-        
-    - name: Install Web Deploy
-      run: |
-        Invoke-WebRequest -Uri https://download.microsoft.com/download/2/D/0/2D0B60C7-966E-439F-9380-EB4D3E441BF7/WebDeploy_amd64_en-US.msi -OutFile WebDeploy.msi
-        Start-Process msiexec.exe -ArgumentList '/i WebDeploy.msi /quiet /norestart' -NoNewWindow -Wait
-        $env:path += ';C:\Program Files\IIS\Microsoft Web Deploy V3\'
-        
+
     - name: Deploy to IIS using Web Deploy
       run: |
         msdeploy.exe -verb:sync `
