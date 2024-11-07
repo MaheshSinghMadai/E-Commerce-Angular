@@ -13,24 +13,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Set up node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '20'
-
-    - name: Install Angular CLI
-      run: npm install -g @angular/cli@18
-
     - name: Install deps and build angular app
       run: |
           cd clientApp
           npm install
           ng build
-
-    - name: Set up .NET
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '6.0.x'  # Adjust for your .NET version
 
     - name: Restore dependencies
       run: dotnet restore
