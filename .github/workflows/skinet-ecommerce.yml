@@ -60,8 +60,8 @@ jobs:
     - name: Set up PowerShell remoting
       shell: pwsh
       run: |
-          $username = "Administator"
-          $password = "Zsoxfsq977#@" | ConvertTo-SecureString -AsPlainText -Force
+          $username = "Admin"
+          $password = "agile@123" | ConvertTo-SecureString -AsPlainText -Force
           $cred = New-Object System.Management.Automation.PSCredential ($username, $password)
           $session = New-PSSession -ComputerName "Agile-Tech02" -Credential $cred
     
