@@ -60,10 +60,10 @@ jobs:
     - name: Set up PowerShell remoting
       shell: pwsh
       run: |
-        $username = "${{secrets.IIS_USERNAME}}"
-        $password = "${{secrets.IIS_PASSWORD}}" | ConvertTo-SecureString -AsPlainText -Force
+        $username = "Administator"
+        $password = "Zsoxfsq977#@" | ConvertTo-SecureString -AsPlainText -Force
         $cred = New-Object System.Management.Automation.PSCredential ($username, $password)
-        $session = New-PSSession -ComputerName "${{secrets.IIS_SERVER}}" -Credential $cred
+        $session = New-PSSession -ComputerName "Agile-Tech02" -Credential $cred
         
         # Stop the IIS App Pool
         Invoke-Command -Session $session -ScriptBlock {
@@ -72,7 +72,7 @@ jobs:
         }
         
         # Copy files from GitHub Actions runner to IIS server
-        Copy-Item -Path ./publish/* -Destination "\\${{secrets.IIS_SERVER}}\c$\inetpub\wwwroot\ecommerce-skinet" -Recurse -Force -ToSession $session
+        Copy-Item -Path ./publish/* -Destination "\\Agile-Tech02\c$\inetpub\wwwroot\ecommerce-skinet" -Recurse -Force -ToSession $session
 
         # Start the IIS App Pool
         Invoke-Command -Session $session -ScriptBlock {
