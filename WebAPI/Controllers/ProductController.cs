@@ -1,6 +1,7 @@
 ﻿using Core.Entities;
 using Core.Interfaces;
 using Core.Specification;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
@@ -46,6 +47,7 @@ namespace WebAPI.Controllers
             return Ok(await unit.Repository<Product>().ListAsync(spec));
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("[action]")]
         public async Task<ActionResult> CreateProduct(Product product)
@@ -56,6 +58,7 @@ namespace WebAPI.Controllers
             return Ok();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut]
         [Route("[action]")]
         public async Task<ActionResult> UpdateProduct(int id, Product product)
@@ -69,6 +72,7 @@ namespace WebAPI.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete]
         [Route("[action]")]
         public async Task<ActionResult> DeleteProduct(int id)

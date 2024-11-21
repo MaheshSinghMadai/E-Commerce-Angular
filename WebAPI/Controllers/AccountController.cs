@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using WebAPI.DTOs;
 using WebAPI.Extension;
 
@@ -59,7 +60,8 @@ namespace WebAPI.Controllers
                 user.Email,
                 user.FirstName,
                 user.LastName,
-                Address = user.Address.ToDto()
+                Address = user.Address.ToDto(),
+                Roles = User.FindFirstValue(ClaimTypes.Role)
             });
 
         }
